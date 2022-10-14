@@ -527,6 +527,11 @@ MonoBehaviour:
   speed: 20
   jumpHeight: 15
   gravity: 1
+  rayRadius: 2
+  layer:
+    serializedVersion: 2
+    m_Bits: 64
+  anim: {fileID: 290685950}
   horizontalSpeed: 5
 --- !u!4 &1209096909
 Transform:

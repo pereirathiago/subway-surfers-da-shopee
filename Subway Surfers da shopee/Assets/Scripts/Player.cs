@@ -11,6 +11,12 @@ public class Player : MonoBehaviour
     private float jumpVelocity;
     public float gravity;
 
+    public float rayRadius;
+    public LayerMask layer;
+    
+    public Animator anim;
+    private bool isDead = false;
+
     public float horizontalSpeed;
     private bool isMovingLeft;
     private bool isMovingRight;
@@ -51,6 +57,8 @@ public class Player : MonoBehaviour
         direction.y = jumpVelocity;
 
         controller.Move(direction * Time.deltaTime);
+
+        OnCollision();
     }
 
     IEnumerator LeftMove()
@@ -72,5 +80,20 @@ public class Player : MonoBehaviour
         }
 
         isMovingRight=false;
+    }
+
+    void OnCollision()
+    {
+        RaycastHit hit;
+
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, rayRadius, layer) && !isDead)
+        {
+            anim.SetTrigger("die");
+            speed = 0;
+            jumpHeight = 0;
+            horizontalSpeed = 0;
+
+            isDead = true;
+        }
     }
 }
