@@ -13,18 +13,22 @@ public class Player : MonoBehaviour
 
     public float rayRadius;
     public LayerMask layer;
+    public LayerMask layerCoin;
     
     public Animator anim;
-    private bool isDead = false;
+    public bool isDead = false;
 
     public float horizontalSpeed;
     private bool isMovingLeft;
     private bool isMovingRight;
 
+    private GameController gc;
+
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        gc = FindObjectOfType<GameController>();
     }
 
     // Update is called once per frame
@@ -57,7 +61,6 @@ public class Player : MonoBehaviour
         direction.y = jumpVelocity;
 
         controller.Move(direction * Time.deltaTime);
-
         OnCollision();
     }
 
@@ -93,7 +96,23 @@ public class Player : MonoBehaviour
             jumpHeight = 0;
             horizontalSpeed = 0;
 
+            Invoke("GameOver", 3f);
+
             isDead = true;
         }
+
+        RaycastHit hitCoin;
+
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward + new Vector3(0,1f,0)), out hitCoin, rayRadius, layerCoin))
+        {
+            gc.addCoin();
+            Destroy(hitCoin.transform.gameObject);
+        }
+    }
+
+    void GameOver()
+    {
+        gc.ShowGameOver();
+
     }
 }
